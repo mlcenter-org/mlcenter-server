@@ -1,0 +1,75 @@
+{% extends "layouts/base.html" %}
+{% load custom_filters%}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+
+{% block content %}
+
+<div class="col-12 mb-5">
+    <a href="{% url 'projects:create' %}" class="btn btn-primary btn-sm float-end"><i class="fa-solid fa-file-contract me-2"></i>New Project</a>
+    <div class="col-12 col-md-6 mx-auto">
+
+        <form action="" method="get">
+
+            {% crispy filter.form %}
+
+        </form>
+    </div>
+
+</div>
+
+<div class="col-12">
+    <div class="row">
+            {% if projects_list %}
+                {% for project in projects_list %}
+                    <div class="col-12 col-md-6 col-xl-4 mt-2">
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="badge bg-primary text-uppercase float-end">project</span>
+                              <h5 class="card-title">{{project.name}}</h5>
+                            </div>
+                            <div class="card-body">
+                              <div class="row">
+                                <div class="col-12 col-xl-12 my-1">
+                                    <a href={% url 'projects:detail' pk=project.id %} class="btn btn-primary btn-sm d-block"><i class="fa-solid fa-list me-2"></i>Details</a>
+                                </div>
+
+                                <div class"col-12">
+                                <hr class="my-2 col-4 mx-auto" />
+                                </div>
+
+                                <div class="col-12 col-xl-6 my-1">
+                                    <a href={% url 'experiments:list' project_id=project.id %} class="btn btn-primary btn-sm d-block"><i class="fa-solid fa-flask me-2"></i>Experiments</a>
+                                </div>
+
+
+                                <div class="col-12 col-xl-6 my-1">
+                                    <a href={% url 'mlregister:list' project_id=project.id %} class="btn btn-primary btn-sm d-block"><i class="fa-solid fa-microchip me-2"></i>Models</a>
+                                </div>
+
+
+                                
+
+
+                              </div>
+                            </div>
+                            <div class="card-footer">
+                                <small class="text-muted">Owner: {{project.owner}} <button class="cbcopy btn btn-secondary btn-sm float-end" data-value="{{project.id}}" 
+                                    data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{project.id}}"
+                                >Copy Project ID</button></small>
+                            </div>
+                          </div>
+                    </div>
+                {% endfor %}
+                {% include 'includes/pagination.html' %}
+            {% else %}
+            <p class="text-center">No projects found</p>
+            {% endif %}
+
+
+    </div>
+</div>
+
+
+{%endblock%}

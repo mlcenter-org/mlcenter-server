@@ -1,0 +1,63 @@
+version: '3'
+
+volumes:
+  mlcenter_local_postgres_data: {}
+  mlcenter_local_postgres_data_backups: {}
+
+
+networks:
+  djangonet:
+    driver: bridge
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/local/django/Dockerfile
+    image: mlcenter_local_django
+    container_name: mlcenter_local_django
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app:z
+    env_file:
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
+    ports:
+      - "8000:8000"
+    networks:
+      - djangonet
+
+    command: /start
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: mlcenter_production_postgres
+    container_name: mlcenter_local_postgres
+    volumes:
+      - mlcenter_local_postgres_data:/var/lib/postgresql/data
+      - mlcenter_local_postgres_data_backups:/backups
+    networks:
+      - djangonet
+    env_file:
+      - ./.envs/.local/.postgres
+
+  docs:
+    image: mlcenter_local_docs
+    container_name: mlcenter_local_docs
+    build:
+      context: .
+      dockerfile: ./compose/local/docs/Dockerfile
+    env_file:
+      - ./.envs/.local/.django
+    volumes:
+      - ./docs:/docs:z
+      - ./config:/app/config:z
+      - ./mlcenter:/app/mlcenter:z
+    ports:
+      - "9000:9000"
+    networks:
+      - djangonet
+    command: /start-docs

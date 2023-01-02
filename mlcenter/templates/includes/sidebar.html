@@ -1,0 +1,58 @@
+{% load static i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<div class="d-inline-flex flex-column flex-shrink-0 bg-white shadow-sm" style="width: 4.5rem;" id="sidebar">
+    <div id="logo">
+      <span class="part-1">ML</span>
+      <span class="part-2">Center</span>
+    </div>
+    <ul class="nav nav-pills nav-flush flex-column mb-auto text-center">
+      <li class="nav-item">
+        <a href="{% url 'dashboard:home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' and request.resolver_match.namespace == 'dashboard' %}active{%endif%} py-3 border-bottom rounded-0" aria-current="page" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Dashboard" data-bs-original-title="Dashboard">
+          <i class="fa-solid fa-gauge"></i></svg>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'projects:list' %}" class="nav-link py-3 {% if request.resolver_match.namespace == 'projects' or request.resolver_match.namespace == 'experiments' or request.resolver_match.namespace == 'mlregister' %}active{%endif%} border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Projects" data-bs-original-title="Projects">
+          <i class="fa-solid fa-bars-progress"></i>
+        </a>
+      </li>
+
+      <li>
+        <a href="{% url 'organizations:list' %}" class="nav-link {% if request.resolver_match.namespace == 'organizations' or request.resolver_match.namespace == 'teams' or request.resolver_match.namespace == 'lifecycles' %}active{%endif%} py-3 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="Organizations" data-bs-original-title="Organizations">
+          <i class="fa-solid fa-building"></i>
+        </a>
+      </li>
+
+      <li>
+        <a href="/api/docs" class="nav-link py-3 border-bottom rounded-0" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="API Documentation" data-bs-original-title="API Documentation" target="_blank">
+          <i class="fa-solid fa-book"></i>
+        </a>
+      </li>
+      
+    </ul>
+    <div class="dropdown ">
+      <a href="https://github.com/mlcenter-org" class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none fs-3" target="_blank">
+        <i class="fa-brands fa-github"></i>
+      </a>
+
+      <a href="#" class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle border-top" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="fa-solid fa-user"></i>
+      </a>
+      <ul class="dropdown-menu text-small shadow">
+        <li><a class="dropdown-item">{{request.user.email}}</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{% url 'projects:create' %}">New project</a></li>
+        <li><a class="dropdown-item" href="{% url 'users:detail' pk=request.user.id %}">Settings</a></li>
+        {% if request.user.is_superuser %}
+          <li><a class="dropdown-item" href="/admin">Admin</a></li>
+        {%endif%}
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item" href="{% url 'account_logout' %}">Sign out</a></li>
+
+      </ul>
+    </div>
+  </div>
+
+
+  

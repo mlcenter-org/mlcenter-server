@@ -1,0 +1,8 @@
+{% load custom_filters%}
+
+{% if request.user|org_role:organization.id == 'owner' or request.user == organization.owner%}
+
+<a href={% url 'organizations:member_detail' org_id=organization.id pk=record.id %} class="btn btn-primary btn-sm"><i class="fa-solid fa-pen-to-square me-2"></i>Edit</a>
+<a href={% url 'organizations:member_delete' org_id=organization.id pk=record.id %} class="btn btn-danger btn-sm"><i class="fa-solid fa-trash-can me-2"></i>Delete</a>
+
+{%endif%}

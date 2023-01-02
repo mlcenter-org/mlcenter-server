@@ -1,0 +1,26 @@
+{% extends "layouts/base.html" %}
+{% block title %}{% block head_title %}{% endblock head_title %}{% endblock title %}
+
+{% block content %}
+
+
+
+  <div class="col-12 col-xl-4 mx-auto offset-md-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="col-12">
+          <div id="logo">
+            <span class="part-1">ML</span>
+            <span class="part-2">Center</span>
+          </div>
+        </div>
+        <div class="col-12">
+          {% block inner %}{% endblock %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock %}

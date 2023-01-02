@@ -1,0 +1,141 @@
+{% extends "layouts/base.html" %}
+{%load custom_filters %}
+
+
+{%block extracss%}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+{%endblock%}
+
+
+{% block content %}
+
+  <div class="col-12">
+    <div class="row">
+
+
+  <div class="col-12 col-xl-8 mx-auto">
+    <div class="card">
+      <div class="card-header">Deployment</div>
+      <div class="card-body">
+
+        <table class="table text-center">
+          <thead>
+            <tr>
+              <th></th>
+                {% for stage in stages%}
+                  <th scope="col">{{stage}}</th>
+                {%endfor%}
+            </tr>
+          </thead>
+          <tbody>
+            {% for release in releases %}
+            <tr>
+              <th><a href="{% url 'experiments:detail' project_id=project.id pk=release.experiment.id %}" class="text-dark text-decoration-none">{{release.mlregister.name}}[{{release.experiment.version}}]</a></th>
+              {% for stage in stages%}
+                {% if release.stage_order_number >= stage.order_number  %}
+                  <td><a href="#" class="btn btn-success disabled"><i class="fa-solid fa-satellite me-2"></i>Deployed {{release.experiment.version}}</a></td>
+                {%else%}
+                {% org_role_stage user=request.user org_id=project.owner.id stage_role=stage.roles as allow_user_deploy %}
+                  <td><a href="{% url 'mlregister:mlrelease_update' project_id=project.id mlregister_id=release.mlregister.id pk=release.id stage_id=stage.id%}" class="btn btn-primary {% if not allow_user_deploy %}disabled{%endif%}"><i class="fa-solid fa-rocket me-2"></i>Deploy {{release.experiment.version}}</a></td>
+                {%endif%}
+              {%endfor%}
+            </tr>
+            {%endfor%}
+
+          </tbody>
+        </table>
+
+
+      </div>
+    </div>
+  </div>
+
+<div class="col-12 col-xl-4 mx-auto">
+  <div class="card">
+    <div class="card-header">Register Details</div>
+    <div class="card-body">
+    
+
+      <div class="col-12 mb-3">
+        <ul class="list-group">
+          <li class="list-group-item"><i class="fa-solid fa-microchip me-2"></i>Register: {{mlregister.name}}</li>
+          <li class="list-group-item"><i class="fa-solid fa-code-branch me-2"></i>Lifecycle: {{mlregister.lifecycle}}</li>
+          <li class="list-group-item"><i class="fa-solid fa-building me-2"></i>Organization: {{mlregister.project.owner}}</li>
+          <li class="list-group-item"><i class="fa-solid fa-flask me-2"></i>Experiments: {{mlregister.project.experiment_set.count}}</li>
+          <li class="list-group-item"><i class="fa-solid fa-rocket me-2"></i>Releases: {{mlregister.releases.count}}</li>
+
+        </ul>
+      </div>
+
+      <hr/>
+      <a href="{% url 'mlregister:update' project_id=project.id pk=mlregister.id %}" class="btn btn-primary btn-sm"><i
+        class="fa-solid fa-pen-to-square me-2"></i>Edit Details</a>
+
+        <a href="{% url 'mlregister:delete' project_id=project.id pk=mlregister.id %}" class="btn btn-danger btn-sm">
+            <i class="fa-solid fa-trash-can"></i>Delete Model</a>
+    
+
+    </div>
+  </div>
+</div>
+
+<div class="col-12 my-3">
+  <div class="col-12 ">
+      <div class="card">
+          <div class="card-header">Load Release files
+          </div>
+          <div class="card-body hljs py-0">
+              <pre><code class="language-python py-1">
+
+from mlcenter import MLCenter
+
+download_path = 'path/to/download'
+
+center = MLCenter(
+    
+    # These variables are optionoal, and if not provided, will be taken from the environment variables
+    ####################################
+    MLCENTER_URL='{{request.scheme }}://{{request.get_host}}',
+    MLCENTER_USERNAME='{{request.user.username}}',
+    MLCENTER_PASSWORD='<password>',
+    ####################################
+    
+    # Project ID is required and you can get the id from the project created in the MLCenter UI
+    PROJECT_ID='{{releases.0.mlregister.project.id}}',
+)
+
+# download specific file | if download_path is not specified, file will be downloaded to current directory
+center.download_artifact(model_name='{{releases.0.mlregister.name}}', model_stage="{{stages.0}}", file_name='file_name', download_path=download_path) 
+
+# sync artifacs to local directory
+center.sync_artifacts(model_name='{{releases.0.mlregister.name}}', model_stage="{{stages.0}}", download_path=download_path)
+              </code></pre>
+            
+          </div>
+        </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+
+{%endblock%}
+
+
+
+{% block inline_javascript %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>
+
+    $(document).ready(function(){
+        hljs.highlightAll();
+         
+
+            
+    });
+
+
+ 
+</script>
+{% endblock %}

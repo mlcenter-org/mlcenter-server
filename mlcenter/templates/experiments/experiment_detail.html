@@ -1,0 +1,206 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+
+{%block extracss%}
+<link href="{% static 'css/jstree-default-theme/style.min.css' %}" rel="stylesheet">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+{%endblock%}
+
+
+{% block content %}
+
+<div class="col-12 col-xl-12 mx-auto">
+  <div class="card">
+    <h5 class="card-header">
+        {{experiment.name}}
+        
+        <span class="badge bg-secondary float-end">VERSION: {{experiment.version}}</span>
+        <span class="badge bg-primary float-end me-2 cbcopy" data-value="{{experiment.id}}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Click to copy">ID: {{experiment.id}}</span>
+    </h5>
+    <div class="card-body">
+
+        <div class="col-12">
+            <h5>Description</h5>
+            <hr/>
+            <p class="card-text">{{experiment.description}}</p>
+        </div>
+    
+        <div class="col-12 mt-5">
+            <div class="row">
+                {% if experiment.metrics %}
+                <div class="col-12 col-xl-6">
+                    <h5>Metrics</h5>
+                    <hr/>
+                    <table class="table table-responsive table-fixed table-striped">
+                        <tbody>
+                            {% for key,value in experiment.metrics.items %}
+                                <tr>
+                                    <th scope="row">{{key}}</th>
+                                    <th>{{value}}</th>
+                                </tr>
+                            {%endfor%}
+                        </tbody>
+                      </table>
+                </div>
+                {%endif%}
+
+                {% if experiment.hyperparameters %}
+                <div class="col-12 col-xl-6">
+                    <h5>Hyperparameters</h5>
+                    <hr/>
+                    <table class="table table-responsive table-fixed table-striped">
+                        <tbody>
+                            {% for key,value in experiment.hyperparameters.items %}
+                                <tr>
+                                    <th scope="row">{{key}}</th>
+                                    <th>{{value}}</th>
+                                </tr>
+                            {%endfor%}
+                        </tbody>
+                      </table>
+                </div>
+                {%endif%}
+
+
+
+                <div class="col-12 mt-3">
+                    <h5>Artifacts</h5>
+                    <hr/>
+
+         
+            
+                    <div class="row">
+                        
+                        <div class="col-12 col-xl-4">
+                            <div class="card">
+                                <div class="card-header">Artifacts
+                                  <a href="#" id="artifact-download" class="btn btn-primary btn-sm float-end" target="_blank" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="No File selected" ><i class="fa-solid fa-download me-2"></i>Download</a>
+                                </div>
+                                <div class="card-body h-70vh overflow-scroll">
+                                    <div id="files-tree"></div>
+                                  
+                                </div>
+                              </div>
+                        </div>
+
+                        <div class="col-12 col-xl-8">
+                            <div class="card">
+                                <div class="card-header pb-3">Artifacts Viewer</div>
+                                <div class="card-body h-70vh overflow-scroll">
+                                    <div id="artifacts-viewer">
+                                        <span class="mx-auto text-center d-block">No file selected</span>
+                                    </div>
+
+                                </div>
+                              </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                
+            </div>
+        </div>
+
+
+      
+      <hr/>
+        <a href="{% url 'experiments:delete' project_id=project.id  pk=experiment.id%}" class="btn btn-danger btn-sm float-end">
+            <i class="fa-solid fa-trash-can me-2"></i>Delete Experiment</a>
+    
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+{%endblock%}
+
+
+{% block inline_javascript %}
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script src="{% static 'js/jstree.min.js' %}"></script>
+
+<script>
+
+    $(document).ready(function(){
+        hljs.highlightAll();
+            
+            $('#files-tree').jstree({
+                'core' : {
+                    'animation' : 0,
+                    'expand_selected_onload' : true,
+                    "check_callback" : true,
+                    "themes" : { "stripes" : true },
+                    'data' : {
+                        'url' : function (node) {
+                            return '{% url 'experiments:jstree_experiment_artifacts' project_id=project.id pk=experiment.id %}';
+                        },
+                        'data' : function (node) {
+                            return { 
+                                'id' : node.id,
+                                'url': node.url
+                            };
+                        }
+                    }
+                },
+                'types': {
+                        'file': {
+                            'icon': 'fa fa-file'
+                        },
+                        'folder': {
+                            'icon': 'fa fa-folder'
+                        },
+                        'image': {
+                            'icon': 'fa-solid fa-image'
+                        },
+                        'archive': {
+                            'icon': 'fa-solid fa-file-zipper'
+                        },
+                        'code': {
+                            'icon': 'fa-solid fa-file-code'
+                        },
+                    
+                },
+                "plugins" : [ 
+                'state',
+                'search',
+                'types',
+                'wholerow',
+                'json_data'
+    
+                ]
+            });
+
+            $('#files-tree').on("select_node.jstree", function (e, data) { 
+                
+
+                if(data.node.original.type == 'image'){
+                    $('#artifacts-viewer').html(`<img src="${data.node.original.url}" class="img-fluid" alt="Responsive image">`);
+                }else if(data.node.original.type == 'code'){
+                    $('#artifacts-viewer').html(`<iframe src="${data.node.original.url}" style="width:100%; height:100%;"></iframe>`);
+                }else{
+                    $('#artifacts-viewer').html(`<div class="alert alert-warning" role="alert">
+                    <i class="fa-solid fa-exclamation-triangle me-2"></i>File type not supported
+                  </div>`);
+                }
+
+                $('#artifact-download').attr('href', data.node.original.url);
+                $('#artifact-download').attr('data-bs-title', data.node.text);
+
+                const artifact_download = document.getElementById('artifact-download')
+                const tooltip = new bootstrap.Tooltip(artifact_download)
+            
+            });
+
+            
+    });
+
+
+ 
+</script>
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends "layouts/base.html" %}
+{%load custom_filters%}
+
+{% block content %}
+
+<div class="col-12 col-xl-8 mx-auto mb-5">
+    <div class="card pb-5">
+        <div class="card-header">
+          {{lifecycle.name}}
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Stages</h5>
+          <p class="card-text">Using this menu you will define the stages within the lifecycle your machine learning workflows will work.</p>
+          <hr/>
+
+          {% if request.user|org_role:organization.id == 'owner'  or request.user == organization.owner%}
+          <a href="{% url 'lifecycles:stage_create' org_id=organization.id lifecycle_id=lifecycle.id%}" class="btn btn-primary btn-sm float-end"><i class="fa-solid fa-code-pull-request me-2"></i>New Stage</a>
+          {%endif%}
+
+          <div class="col-12 col-xl-8 mx-auto">
+
+            {% if lifecycle_stages_list %}
+
+          {% for stage in lifecycle_stages_list %}
+
+            
+          <div class="card">
+            <div class="card-header">
+                <span class="badge bg-primary float-end text-uppercase">{{stage.roles}}</span>
+              {{stage.name}}
+             
+            </div>
+            <div class="card-body">
+              <p class="card-text">{{stage.description}}</p>
+              {% if request.user|org_role:organization.id == 'owner' or request.user == organization.owner %}
+              <hr/>
+              <a href="{% url 'lifecycles:stage_update' org_id=organization.id lifecycle_id=lifecycle.id pk=stage.id %}" class="btn btn-primary btn-sm d-block"><i class="fa-solid fa-pen-to-square me-2"></i>Edit Stage</a>
+              {%endif%}
+            </div>
+
+            <div class="card-footer">
+              <small class="text-muted">Created at: {{stage.created_at}} </small>
+              <div class="float-end">
+                {%if not forloop.first %}
+                <a href="{% url 'lifecycles:stage_move' org_id=organization.id lifecycle_id=lifecycle.id stage_id=stage.id direction='up' %}" class="text-dark {%if not forloop.first and not forloop.last %}me-1{%endif%}" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Move Up"><i class="fa-solid fa-arrow-up"></i></a>
+                {%endif%}
+                {%if not forloop.last %}
+                <a href="{% url 'lifecycles:stage_move' org_id=organization.id lifecycle_id=lifecycle.id stage_id=stage.id direction='down' %}" class="text-dark"><i class="fa-solid fa-arrow-down" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Move Down"></i></a>
+                {%endif%}
+              </div>
+            </div>
+          </div>
+
+          {% if not forloop.last%}
+          <i class="fa-solid fa-arrow-down text-center mx-auto lifecycle-arrow d-block my-3"></i>
+            {%endif%}
+
+            {%endfor%}
+
+            {%else%}
+            <p>No stages have been created yet.</p>
+          {%endif%}
+
+          </div>
+
+
+
+
+        </div>
+      </div>
+</div>
+
+
+
+
+{%endblock%}

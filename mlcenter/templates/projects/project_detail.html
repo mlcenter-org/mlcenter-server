@@ -1,0 +1,35 @@
+{% extends "layouts/base.html" %}
+
+
+{% block content %}
+
+<div class="col-12 col-xl-6 mx-auto">
+  <div class="card">
+    <h5 class="card-header">{{project.name}}</h5>
+    <div class="card-body">
+    
+
+      <div class="col-12 mb-3">
+        <ul class="list-group">
+          <li class="list-group-item"><i class="fa-solid fa-building me-2"></i> Organization: {{project.owner}}</li>
+          <li class="list-group-item"><i class="fa-solid fa-file-contract me-2"></i>Project: {{project.name}}</li>
+          <li class="list-group-item"><i class="fa-solid fa-flask me-2"></i> Experiments: {{project.experiment_set.count}}</li>
+        </ul>
+      </div>
+
+      <p clas="card-text">Description: {{project.description}}</p>
+      <hr/>
+      <a href="{% url 'projects:update' pk=project.id %}" class="btn btn-primary btn-sm"><i
+        class="fa-solid fa-pen-to-square me-2"></i>Edit Details</a>
+
+      {% if request.user|org_role:organization.id == 'owner' or request.user == organization.owner%}
+        <a href="{% url 'projects:delete' pk=project.id %}" class="btn btn-danger btn-sm float-end">
+            <i class="fa-solid fa-trash-can me-2"></i>Delete Project</a>
+      {%endif%}
+
+    </div>
+  </div>
+</div>
+
+
+{%endblock%}

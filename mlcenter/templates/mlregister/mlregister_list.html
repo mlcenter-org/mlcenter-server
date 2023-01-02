@@ -1,0 +1,47 @@
+{% extends "layouts/base.html" %}
+{% load custom_filters%}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+
+{% block content %}
+
+
+<div class="col-12 mb-5">
+        <div class="col-12 col-md-6 mx-auto">
+
+            <form action="" method="get">
+
+                {% crispy filter.form %}
+
+            </form>
+        </div>
+
+</div>
+
+<div class="col-12 mx-auto">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    Models
+                    <a href="{% url 'mlregister:create' project_id=project.id %}" class="btn btn-primary btn-sm float-end"><i class="fa-solid fa-box me-2"></i>Register Model</a>
+
+                </div>
+                <div class="card-body overflow-scroll">
+                    
+                    {% render_table table %}
+                
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+{%endblock%}

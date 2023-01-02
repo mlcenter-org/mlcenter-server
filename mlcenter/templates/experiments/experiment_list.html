@@ -1,0 +1,78 @@
+{% extends "layouts/base.html" %}
+{% load custom_filters%}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+
+{% block content %}
+
+
+<div class="col-12 mb-5">
+        <div class="col-12 col-md-6 mx-auto">
+
+            <form action="" method="get">
+
+                {% crispy filter.form %}
+
+            </form>
+        </div>
+
+</div>
+
+<div class="col-12 mx-auto">
+    <div class="row">
+
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    Experiments
+                        <button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal" data-bs-target="#releaseModelModal">
+                            <i class="fa-solid fa-box me-2"></i>Release Model
+                        </button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="releaseModelModal" tabindex="-1" aria-labelledby="releaseModelModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="releaseModelModalLabel">Release Model</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <form method="POST" action="{% url 'mlregister:mlrelease_create' project_id=project.id %}">
+                                <div class="modal-body">
+                                    {% csrf_token %}
+                                    {{release_model_form | crispy}}
+                               
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary btn-sm me-auto" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary btn-sm ">Release</button>
+                                </div>
+                                </form>
+                            </div>
+                            </div>
+                        </div>
+
+                </div>
+                <div class="card-body overflow-scroll">
+                    
+                    {% render_table table %}
+                
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">
+                        <span class="badge badge-secondary bg-secondary float-start">Project: {{project.name}}</span>
+                        <span class="badge badge-secondary bg-secondary float-end">Experiments: {{project.experiment_set.count}}</span>
+
+                    </span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+{%endblock%}

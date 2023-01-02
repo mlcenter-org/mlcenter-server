@@ -1,0 +1,31 @@
+{% extends "layouts/base.html" %}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<div class="col-12">
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Lifecycle Stage details</h5>
+            
+          <form method="POST">
+            {% csrf_token %}
+            {{form | crispy}}
+
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{% url 'lifecycles:stage_list' org_id=organization.id lifecycle_id=lifecycle.id %}" class="btn btn-danger float-end">Cancel</a>
+
+            {%if lifecyclestage%}
+            <a href="{% url 'lifecycles:stage_delete' org_id=organization.id lifecycle_id=lifecycle.id pk=lifecyclestage.id%}" class="btn btn-danger float-end me-3">Delete</a>
+            {%endif%}
+            
+          </form>
+    
+        </div>
+      </div>
+</div>
+
+
+{%endblock%}

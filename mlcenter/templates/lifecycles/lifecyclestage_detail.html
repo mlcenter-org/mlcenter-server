@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %}
+
+
+{% block content %}
+
+<div class="col-12 col-xl-6 mx-auto">
+  <div class="card">
+    <h5 class="card-header">{{team.name}}</h5>
+    <div class="card-body">
+    
+
+      <div class="col-12 mb-3">
+        <ul class="list-group">
+          <li class="list-group-item"><i class="fa-solid fa-user-tie me-2"></i> Owner: {{team.owner}}</li>
+        </ul>
+      </div>
+
+      <p clas="card-text">Description: {{team.description}}</p>
+      <hr/>
+      <a href="{% url 'teams:update' org_id=organization.id pk=team.id %}" class="btn btn-primary btn-sm"><i
+        class="fa-solid fa-pen-to-square me-2"></i>Edit Details</a>
+
+        <a href="{% url 'teams:delete' org_id=organization.id pk=team.id %}" class="btn btn-danger btn-sm">
+            <i class="fa-solid fa-trash-can"></i>Delete Team</a>
+    
+
+    </div>
+  </div>
+</div>
+
+
+{%endblock%}

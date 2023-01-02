@@ -1,0 +1,36 @@
+{% extends "layouts/base.html" %}
+
+
+{% block content %}
+
+<div class="col-12 col-xl-6 mx-auto">
+  <div class="card">
+    <h5 class="card-header">{{organization_member.user.email}}</h5>
+    <div class="card-body">
+    
+
+      <div class="col-12 mb-3">
+        <ul class="list-group">
+          <li class="list-group-item"><i class="fa-solid fa-building  me-2"></i> Organization: {{organization_member.organization}}</li>
+          <li class="list-group-item"><i class="fa-solid fa-user-tie  me-2"></i> Organization Owner: {{organization_member.organization.owner}}</li>
+          <li class="list-group-item"><i class="fa-solid fa-user me-2"></i> Member: {{organization_member.user.email}}</li>
+          <li class="list-group-item"><i class="fa-solid fa-address-book me-2"></i> Role: {{organization_member.role}}</li>
+        </ul>
+      </div>
+
+      <hr/>
+      <a href="{% url 'organizations:member_update' org_id=organization.id pk=organization_member.id %}" class="btn btn-primary btn-sm"><i
+        class="fa-solid fa-pen-to-square me-2"></i>Edit Details</a>
+
+        <a href="{% url 'organizations:member_delete' org_id=organization.id pk=organization_member.id %}" class="btn btn-danger btn-sm float-end">
+            <i class="fa-solid fa-trash-can me-2"></i>Delete Member</a>
+    
+
+    </div>
+  </div>
+</div>
+
+
+
+
+{%endblock%}

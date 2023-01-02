@@ -1,0 +1,4 @@
+
+<a href={% url 'lifecycles:detail' org_id=organization.id pk=record.id %} class="btn btn-primary btn-sm "><i class="fa-solid fa-list me-2"></i>Details</a>
+
+<a href={% url 'lifecycles:stage_list' org_id=organization.id lifecycle_id=record.id%} class="btn btn-primary btn-sm "><i class="fa-solid fa-code-fork me-2"></i>Stages</a>

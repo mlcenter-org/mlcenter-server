@@ -1,0 +1,46 @@
+{% extends "layouts/base.html" %}
+
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+
+<div class="col-12">
+    <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Project details</h5>
+            
+          <form method="POST">
+            {% csrf_token %}
+            {% crispy form%}
+
+          </form>
+    
+        </div>
+      </div>
+</div>
+
+
+
+{%endblock%}
+
+{% block inline_javascript %}
+
+<script>
+
+document.getElementById('id_owner_type').addEventListener('change', function() {
+    var owner_type = this.value;
+    var url = new URL(window.location.href);
+    url.searchParams.set('owner_type', owner_type);
+    window.location.href = url;
+
+});
+
+
+
+
+</script>
+
+
+{% endblock %}
