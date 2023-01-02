@@ -103,7 +103,7 @@ def jstree_experiment_artifacts(request, project_id, pk):
     files = []
     for experiment_artifact in experiment_artifacts:
         try:
-            file_type = experiment_artifact.artifact.url.split('.')[-1]
+            file_type = experiment_artifact.artifact.url.split('.')[-1].split('?')[0]
             file_type = get_file_type(file_type, FILES_MAPPING)
 
         except:
