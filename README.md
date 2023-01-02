@@ -1,11 +1,13 @@
 # MLCenter
-![logo](./mlcenter/static/brand/logo_square.png =250x)
-[![Website](https://img.shields.io/badge/Website-cccccc?style=for-the-badge&logo=web&logoColor=white)](https://mlcenter.org)
-
-Governance-Driven MLOps Platform
-
 [![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
 [![Black code style](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
+
+
+
+<img src="https://raw.githubusercontent.com/mlcenter-org/mlcenter-server/main/mlcenter/static/brand/logo_square.png" width="28" /> [![Website](https://img.shields.io/badge/Website-cccccc?style=for-the-badge&logo=web&logoColor=white)](https://mlcenter.org)
+
+
+Governance-Driven MLOps Platform
 
 ## About
 
